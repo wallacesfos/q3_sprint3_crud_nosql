@@ -32,6 +32,11 @@ def create_post_controller():
             json.dump(id, ids_file)
         
     data = request.get_json()
+
+    #Aqui vai verificar se tem ou não eles, caso um não exista vai dar um KeyError
+    if data["author"] and data["title"] and data["tags"] and data["content"]:
+        pass
+
     poster = PostsDb(id, **data)
     poster.post_model()
 
@@ -49,12 +54,14 @@ def patch_post_controller(id):
     verification = False
 
     for key, value in data.items():
+            verification = False
             for i in params:
                 if key == i:
                     verification = True
                 
     if not verification:
         raise JsonNotAccepted("O JSON deve conter apenas esses: 'author', 'content', 'tags', 'title'")
+
 
     response = PostsDb.get_post_model({"id": id})
         
