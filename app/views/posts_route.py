@@ -30,6 +30,8 @@ def posts_route(app: Flask):
             return create_post_controller(), 201
         except KeyError:
             return {"msg": "Está faltando alguma chave"}, 400
+        except Exception as err:
+            return {"error": f"{err}"}, 400
     
     @app.delete('/posts/<id>')
     def delete_post(id):

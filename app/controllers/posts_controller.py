@@ -20,6 +20,21 @@ def get_post_controller(id = None):
 
 def create_post_controller():
     id = None
+    verification = False
+    data = request.get_json()
+    params = ["author", "content", "tags", "title"]
+
+    for key, value in data.items():
+            verification = False
+            for i in params:
+                if key == i:
+                    verification = True
+            if not verification:
+                raise JsonNotAccepted("O JSON deve conter apenas esses: 'author', 'content', 'tags', 'title'")
+                
+    
+
+
     if not os.path.exists("./ids.json"):
         with open("./ids.json", 'w') as ids_file:
             json.dump(1, ids_file)
@@ -31,7 +46,6 @@ def create_post_controller():
         with open("./ids.json", 'w') as ids_file:
             json.dump(id, ids_file)
         
-    data = request.get_json()
 
     #Aqui vai verificar se tem ou não eles, caso um não exista vai dar um KeyError
     if data["author"] and data["title"] and data["tags"] and data["content"]:
@@ -57,10 +71,9 @@ def patch_post_controller(id):
             verification = False
             for i in params:
                 if key == i:
-                    verification = True
-                
-    if not verification:
-        raise JsonNotAccepted("O JSON deve conter apenas esses: 'author', 'content', 'tags', 'title'")
+                    verification = True       
+            if not verification:
+                raise JsonNotAccepted("O JSON deve conter apenas esses: 'author', 'content', 'tags', 'title'")
 
 
     response = PostsDb.get_post_model({"id": id})
